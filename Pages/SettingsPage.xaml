@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="BitacoraGrabacion.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BitacoraGrabacion.Models"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel MaxWidth="{StaticResource ContentMaxWidth}" Padding="{StaticResource PagePadding}" Spacing="16">
+            <StackPanel Spacing="8">
+                <TextBlock Style="{StaticResource PageTitleStyle}" Text="Configuración" />
+                <TextBlock
+                    Style="{StaticResource PageSubtitleStyle}"
+                    Text="Los cargos y los nombres que agregues aquí aparecen como desplegables al registrar una grabación." />
+            </StackPanel>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel Spacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock FontWeight="SemiBold" Text="Cargos" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="Aparecen en el desplegable de cargo: operador, productor, talento..." />
+                    </StackPanel>
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            x:Name="RolBox"
+                            PlaceholderText="Nombre del cargo"
+                            KeyDown="RolBox_KeyDown" />
+                        <Button
+                            Grid.Column="1"
+                            Click="AgregarRol_Click"
+                            Content="Agregar"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+                    <ItemsControl x:Name="RolesList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:CatalogItem">
+                                <Grid Padding="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Nombre}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Click="EliminarRol_Click"
+                                        Tag="{x:Bind IdTexto}"
+                                        ToolTipService.ToolTip="Quitar cargo">
+                                        <FontIcon FontSize="14" Glyph="&#xE74D;" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel Spacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock FontWeight="SemiBold" Text="Nombres" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="Aparecen en el desplegable de nombre. En cada grabación cualquiera puede tomar el cargo que desee." />
+                    </StackPanel>
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            x:Name="PersonaBox"
+                            PlaceholderText="Nombre de la persona"
+                            KeyDown="PersonaBox_KeyDown" />
+                        <Button
+                            Grid.Column="1"
+                            Click="AgregarPersona_Click"
+                            Content="Agregar"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+                    <ItemsControl x:Name="PersonasList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:Persona">
+                                <Grid Padding="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Nombre}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Click="EliminarPersona_Click"
+                                        Tag="{x:Bind IdTexto}"
+                                        ToolTipService.ToolTip="Quitar persona">
+                                        <FontIcon FontSize="14" Glyph="&#xE74D;" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel Spacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock FontWeight="SemiBold" Text="Cámaras" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="Modelos o equipos de captura que se podrán elegir al registrar." />
+                    </StackPanel>
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            x:Name="CamaraBox"
+                            PlaceholderText="Nombre de la cámara"
+                            KeyDown="CamaraBox_KeyDown" />
+                        <Button
+                            Grid.Column="1"
+                            Click="AgregarCamara_Click"
+                            Content="Agregar"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+                    <ItemsControl x:Name="CamarasList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:CatalogItem">
+                                <Grid Padding="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Nombre}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Click="EliminarCamara_Click"
+                                        Tag="{x:Bind IdTexto}"
+                                        ToolTipService.ToolTip="Quitar cámara">
+                                        <FontIcon FontSize="14" Glyph="&#xE74D;" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel Spacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock FontWeight="SemiBold" Text="Electrónicos y periféricos" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="Micrófonos, luces, trípodes y cualquier accesorio usado en la sesión." />
+                    </StackPanel>
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            x:Name="EquipoBox"
+                            PlaceholderText="Nombre del equipo o periférico"
+                            KeyDown="EquipoBox_KeyDown" />
+                        <Button
+                            Grid.Column="1"
+                            Click="AgregarEquipo_Click"
+                            Content="Agregar"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </Grid>
+                    <ItemsControl x:Name="EquiposList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:CatalogItem">
+                                <Grid Padding="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{x:Bind Nombre}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Click="EliminarEquipo_Click"
+                                        Tag="{x:Bind IdTexto}"
+                                        ToolTipService.ToolTip="Quitar equipo">
+                                        <FontIcon FontSize="14" Glyph="&#xE74D;" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

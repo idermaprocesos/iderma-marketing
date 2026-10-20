@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="BitacoraGrabacion.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BitacoraGrabacion.Models"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="TarjetaGrabacion" x:DataType="models:RegistroGrabacion">
+            <Border
+                Padding="14,12"
+                Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="10"
+                Tag="{x:Bind IdTexto}"
+                Tapped="Tarjeta_Tapped"
+                ToolTipService.ToolTip="Pulsa la tarjeta para abrirla. Arrastra el asa para cambiar de etapa.">
+                <Grid ColumnSpacing="8" RowSpacing="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Text="{x:Bind Titulo}"
+                        TextWrapping="Wrap" />
+                    <Border
+                        Grid.Column="1"
+                        Padding="8,4"
+                        VerticalAlignment="Top"
+                        Background="Transparent"
+                        CanDrag="True"
+                        DragStarting="Tarjeta_DragStarting"
+                        DropCompleted="Tarjeta_DropCompleted"
+                        Tag="{x:Bind IdTexto}"
+                        ToolTipService.ToolTip="Arrastra para cambiar de etapa">
+                        <FontIcon
+                            FontSize="16"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Glyph="&#xE76F;"
+                            IsHitTestVisible="False" />
+                    </Border>
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        FontSize="12"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{x:Bind PersonasTexto}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Grid.Row="2"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{x:Bind FechaLimiteTexto}"
+                        Visibility="{x:Bind LimiteNormalVisibility}" />
+                    <TextBlock
+                        Grid.Row="2"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                        Text="{x:Bind FechaLimiteTexto}"
+                        Visibility="{x:Bind LimiteVencidaVisibility}" />
+                    <StackPanel
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        Spacing="4">
+                        <Button
+                            Click="Completar_Click"
+                            Tag="{x:Bind IdTexto}"
+                            ToolTipService.ToolTip="Marcar como completada y quitarla del tablero"
+                            Visibility="{x:Bind CompletarVisibility}">
+                            <FontIcon FontSize="14" Glyph="&#xE73E;" />
+                        </Button>
+                        <Button
+                            Click="Exportar_Click"
+                            Tag="{x:Bind IdTexto}"
+                            ToolTipService.ToolTip="Exportar esta grabación">
+                            <FontIcon FontSize="14" Glyph="&#xE74E;" />
+                        </Button>
+                        <Button
+                            Click="Eliminar_Click"
+                            Tag="{x:Bind IdTexto}"
+                            ToolTipService.ToolTip="Eliminar registro">
+                            <FontIcon FontSize="14" Glyph="&#xE74D;" />
+                        </Button>
+                    </StackPanel>
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.ColumnSpan="2"
+                        FontSize="12"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Text="{x:Bind FechaTexto}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Padding="{StaticResource PagePadding}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel MaxWidth="{StaticResource ContentMaxWidth}" HorizontalAlignment="Left" Spacing="8">
+            <TextBlock Style="{StaticResource PageTitleStyle}" Text="Bitácora de grabación" />
+            <TextBlock Style="{StaticResource PageSubtitleStyle}"
+                       Text="Arrastra una grabación entre las columnas para cambiar su etapa. Al completarla, sale del tablero." />
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="0,20,0,16" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox
+                x:Name="BusquedaBox"
+                PlaceholderText="Buscar por título, persona, etapa, cámara o equipo"
+                TextChanged="BusquedaBox_TextChanged" />
+            <Button
+                Grid.Column="1"
+                Click="NuevaGrabacion_Click"
+                Style="{StaticResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon FontSize="16" Glyph="&#xE710;" />
+                    <TextBlock Text="Nueva grabación" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Row="2" RowSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+            <Grid x:Name="Tablero" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.Column="0"
+                    Padding="14"
+                    AllowDrop="True"
+                    DragOver="Columna_DragOver"
+                    Drop="Columna_Drop"
+                    Style="{StaticResource SectionCardStyle}"
+                    Tag="lluvia">
+                    <Grid RowSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon VerticalAlignment="Center" Glyph="&#xE82F;" />
+                            <TextBlock x:Name="TituloLluvia" VerticalAlignment="Center" FontWeight="SemiBold" Text="Lluvia de ideas" />
+                        </StackPanel>
+                        <ListView
+                            x:Name="ListaLluvia"
+                            Grid.Row="1"
+                            Padding="0"
+                            AllowDrop="True"
+                            Background="Transparent"
+                            DragOver="Columna_DragOver"
+                            Drop="Columna_Drop"
+                            HorizontalContentAlignment="Stretch"
+                            IsItemClickEnabled="False"
+                            ItemContainerStyle="{StaticResource ListaTarjetaItemStyle}"
+                            ItemTemplate="{StaticResource TarjetaGrabacion}"
+                            SelectionMode="None"
+                            Tag="lluvia" />
+                        <TextBlock
+                            x:Name="VacioLluvia"
+                            Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsHitTestVisible="False"
+                            Text="Suelta aquí para pasar a lluvia de ideas."
+                            TextWrapping="Wrap"
+                            Visibility="Collapsed" />
+                    </Grid>
+                </Border>
+
+                <Border
+                    Grid.Column="1"
+                    Padding="14"
+                    AllowDrop="True"
+                    DragOver="Columna_DragOver"
+                    Drop="Columna_Drop"
+                    Style="{StaticResource SectionCardStyle}"
+                    Tag="grabando">
+                    <Grid RowSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon VerticalAlignment="Center" Glyph="&#xE714;" />
+                            <TextBlock x:Name="TituloGrabando" VerticalAlignment="Center" FontWeight="SemiBold" Text="Grabando" />
+                        </StackPanel>
+                        <ListView
+                            x:Name="ListaGrabando"
+                            Grid.Row="1"
+                            Padding="0"
+                            AllowDrop="True"
+                            Background="Transparent"
+                            DragOver="Columna_DragOver"
+                            Drop="Columna_Drop"
+                            HorizontalContentAlignment="Stretch"
+                            IsItemClickEnabled="False"
+                            ItemContainerStyle="{StaticResource ListaTarjetaItemStyle}"
+                            ItemTemplate="{StaticResource TarjetaGrabacion}"
+                            SelectionMode="None"
+                            Tag="grabando" />
+                        <TextBlock
+                            x:Name="VacioGrabando"
+                            Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsHitTestVisible="False"
+                            Text="Suelta aquí para pasar a grabando."
+                            TextWrapping="Wrap"
+                            Visibility="Collapsed" />
+                    </Grid>
+                </Border>
+
+                <Border
+                    Grid.Column="2"
+                    Padding="14"
+                    AllowDrop="True"
+                    DragOver="Columna_DragOver"
+                    Drop="Columna_Drop"
+                    Style="{StaticResource SectionCardStyle}"
+                    Tag="editando">
+                    <Grid RowSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon VerticalAlignment="Center" Glyph="&#xE70F;" />
+                            <TextBlock x:Name="TituloEditando" VerticalAlignment="Center" FontWeight="SemiBold" Text="Editando" />
+                        </StackPanel>
+                        <ListView
+                            x:Name="ListaEditando"
+                            Grid.Row="1"
+                            Padding="0"
+                            AllowDrop="True"
+                            Background="Transparent"
+                            DragOver="Columna_DragOver"
+                            Drop="Columna_Drop"
+                            HorizontalContentAlignment="Stretch"
+                            IsItemClickEnabled="False"
+                            ItemContainerStyle="{StaticResource ListaTarjetaItemStyle}"
+                            ItemTemplate="{StaticResource TarjetaGrabacion}"
+                            SelectionMode="None"
+                            Tag="editando" />
+                        <TextBlock
+                            x:Name="VacioEditando"
+                            Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsHitTestVisible="False"
+                            Text="Suelta aquí para pasar a editando."
+                            TextWrapping="Wrap"
+                            Visibility="Collapsed" />
+                    </Grid>
+                </Border>
+
+                <Border
+                    Grid.Column="3"
+                    Padding="14"
+                    AllowDrop="True"
+                    DragOver="Columna_DragOver"
+                    Drop="Columna_Drop"
+                    Style="{StaticResource SectionCardStyle}"
+                    Tag="revision">
+                    <Grid RowSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon VerticalAlignment="Center" Glyph="&#xE73E;" />
+                            <TextBlock x:Name="TituloRevision" VerticalAlignment="Center" FontWeight="SemiBold" Text="En revisión" />
+                        </StackPanel>
+                        <ListView
+                            x:Name="ListaRevision"
+                            Grid.Row="1"
+                            Padding="0"
+                            AllowDrop="True"
+                            Background="Transparent"
+                            DragOver="Columna_DragOver"
+                            Drop="Columna_Drop"
+                            HorizontalContentAlignment="Stretch"
+                            IsItemClickEnabled="False"
+                            ItemContainerStyle="{StaticResource ListaTarjetaItemStyle}"
+                            ItemTemplate="{StaticResource TarjetaGrabacion}"
+                            SelectionMode="None"
+                            Tag="revision" />
+                        <TextBlock
+                            x:Name="VacioRevision"
+                            Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsHitTestVisible="False"
+                            Text="Suelta aquí para pasar a en revisión."
+                            TextWrapping="Wrap"
+                            Visibility="Collapsed" />
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <StackPanel
+                x:Name="EmptyState"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="8"
+                Visibility="Collapsed">
+                <FontIcon
+                    FontSize="36"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Glyph="&#xE8A5;" />
+                <TextBlock
+                    x:Name="EmptyText"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource PageSubtitleStyle}"
+                    Text="Aún no hay registros. Crea la primera grabación o agrega cargos y nombres en Configuración."
+                    TextWrapping="Wrap" />
+            </StackPanel>
+            </Grid>
+
+            <Border
+                x:Name="ZonaCompletar"
+                Grid.Row="1"
+                Padding="14"
+                AllowDrop="True"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                DragOver="Columna_DragOver"
+                Drop="Columna_Drop"
+                Tag="completado"
+                Visibility="Collapsed">
+                <StackPanel Spacing="10">
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <FontIcon VerticalAlignment="Center" Glyph="&#xE930;" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                            <TextBlock x:Name="TituloCompletadas" FontWeight="SemiBold" Text="Completadas" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="Suelta aquí una grabación para sacarla del tablero. Desde aquí puedes arrastrarla de vuelta a una etapa."
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                        <Button
+                            x:Name="VerCompletadasButton"
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            Click="VerCompletadas_Click"
+                            Content="Ver"
+                            Visibility="Collapsed" />
+                    </Grid>
+                    <ListView
+                        x:Name="ListaCompletadas"
+                        MaxHeight="240"
+                        Padding="0"
+                        HorizontalContentAlignment="Stretch"
+                        IsItemClickEnabled="False"
+                        ItemContainerStyle="{StaticResource ListaTarjetaItemStyle}"
+                        ItemTemplate="{StaticResource TarjetaGrabacion}"
+                        SelectionMode="None"
+                        Visibility="Collapsed" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

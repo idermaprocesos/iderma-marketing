@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="BitacoraGrabacion.Pages.NuevaGrabacionPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BitacoraGrabacion.Models"
+    mc:Ignorable="d">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled">
+        <StackPanel MaxWidth="{StaticResource ContentMaxWidth}" Padding="{StaticResource PagePadding}" Spacing="16">
+            <StackPanel Spacing="8">
+                <TextBlock x:Name="TituloPagina" Style="{StaticResource PageTitleStyle}" Text="Nueva grabación" />
+                <TextBlock
+                    x:Name="SubtituloPagina"
+                    Style="{StaticResource PageSubtitleStyle}"
+                    Text="Elige la etapa de la producción, pon las fechas límite y registra a las personas de la sesión." />
+            </StackPanel>
+
+            <InfoBar
+                x:Name="AvisoBar"
+                IsClosable="True"
+                IsOpen="False" />
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel Spacing="16">
+                    <StackPanel Spacing="4">
+                        <TextBlock FontWeight="SemiBold" Text="Producción" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="Marca la etapa y la fecha límite. Completado la saca de las columnas del tablero."
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="TarjetaLluvia" Padding="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8">
+                            <StackPanel Spacing="8">
+                                <RadioButton x:Name="EstadoLluvia" Checked="Estado_Checked" Content="Lluvia de ideas" GroupName="EstadoProduccion" Tag="lluvia" />
+                                <CalendarDatePicker x:Name="LimiteLluviaPicker" DateFormat="{}{day.integer} {month.abbreviated} {year.full}" Header="Fecha límite" HorizontalAlignment="Stretch" PlaceholderText="Elige una fecha" />
+                            </StackPanel>
+                        </Border>
+                        <Border x:Name="TarjetaGrabando" Grid.Column="1" Padding="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8">
+                            <StackPanel Spacing="8">
+                                <RadioButton x:Name="EstadoGrabando" Checked="Estado_Checked" Content="Grabando" GroupName="EstadoProduccion" Tag="grabando" />
+                                <CalendarDatePicker x:Name="LimiteGrabandoPicker" DateFormat="{}{day.integer} {month.abbreviated} {year.full}" Header="Fecha límite" HorizontalAlignment="Stretch" PlaceholderText="Elige una fecha" />
+                            </StackPanel>
+                        </Border>
+                        <Border x:Name="TarjetaEditando" Grid.Column="2" Padding="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8">
+                            <StackPanel Spacing="8">
+                                <RadioButton x:Name="EstadoEditando" Checked="Estado_Checked" Content="Editando" GroupName="EstadoProduccion" Tag="editando" />
+                                <CalendarDatePicker x:Name="LimiteEditandoPicker" DateFormat="{}{day.integer} {month.abbreviated} {year.full}" Header="Fecha límite" HorizontalAlignment="Stretch" PlaceholderText="Elige una fecha" />
+                            </StackPanel>
+                        </Border>
+                        <Border x:Name="TarjetaRevision" Grid.Column="3" Padding="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8">
+                            <StackPanel Spacing="8">
+                                <RadioButton x:Name="EstadoRevision" Checked="Estado_Checked" Content="En revisión" GroupName="EstadoProduccion" Tag="revision" />
+                                <CalendarDatePicker x:Name="LimiteRevisionPicker" DateFormat="{}{day.integer} {month.abbreviated} {year.full}" Header="Fecha límite" HorizontalAlignment="Stretch" PlaceholderText="Elige una fecha" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Border x:Name="TarjetaCompletado" Padding="12" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8">
+                        <StackPanel Spacing="4">
+                            <RadioButton x:Name="EstadoCompletado" Checked="Estado_Checked" Content="Completado" GroupName="EstadoProduccion" Tag="completado" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="La grabación deja de aparecer en lluvia de ideas, grabando, editando y en revisión."
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock FontWeight="SemiBold" Text="Contenido" />
+                    <TextBox
+                        x:Name="TituloBox"
+                        Header="Título o nombre del contenido"
+                        PlaceholderText="Ej. Entrevista de producto, reel de clínica..." />
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <DatePicker x:Name="FechaPicker" Header="Fecha" HorizontalAlignment="Stretch" />
+                        <TimePicker x:Name="HoraPicker" Grid.Column="1" Header="Hora" HorizontalAlignment="Stretch" />
+                        <TextBox
+                            x:Name="DuracionBox"
+                            Grid.Column="2"
+                            Header="Duración"
+                            PlaceholderText="Ej. 12 min" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel Spacing="16">
+                    <StackPanel Spacing="4">
+                        <TextBlock FontWeight="SemiBold" Text="Personas de la sesión" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="Si eliges Talento / Presentador, escribe el nombre del invitado. En los demás cargos se usa el desplegable." />
+                    </StackPanel>
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Cargo" />
+                        <TextBlock Grid.Column="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Nombre" />
+                    </Grid>
+                    <ItemsControl x:Name="ParticipantesList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:ParticipanteFila">
+                                <Grid Margin="0,0,0,8" ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="40" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox
+                                        MinWidth="180"
+                                        HorizontalAlignment="Stretch"
+                                        DisplayMemberPath="Nombre"
+                                        ItemsSource="{x:Bind Cargos}"
+                                        PlaceholderText="Elige un cargo"
+                                        SelectedItem="{x:Bind CargoSeleccionado, Mode=TwoWay}" />
+                                    <ComboBox
+                                        Grid.Column="1"
+                                        MinWidth="180"
+                                        HorizontalAlignment="Stretch"
+                                        DisplayMemberPath="Nombre"
+                                        ItemsSource="{x:Bind Nombres}"
+                                        PlaceholderText="Elige un nombre"
+                                        SelectedItem="{x:Bind PersonaSeleccionada, Mode=TwoWay}"
+                                        Visibility="{x:Bind ComboNombreVisibility, Mode=OneWay}" />
+                                    <TextBox
+                                        Grid.Column="1"
+                                        MinWidth="180"
+                                        HorizontalAlignment="Stretch"
+                                        PlaceholderText="Nombre del invitado"
+                                        Text="{x:Bind NombreInvitado, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Visibility="{x:Bind CajaInvitadoVisibility, Mode=OneWay}" />
+                                    <Button
+                                        Grid.Column="2"
+                                        Click="QuitarParticipante_Click"
+                                        Tag="{x:Bind IdTexto}"
+                                        ToolTipService.ToolTip="Quitar persona">
+                                        <FontIcon FontSize="14" Glyph="&#xE74D;" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button Click="AgregarParticipante_Click" Content="Agregar persona" />
+                    <HyperlinkButton Click="IrConfiguracion_Click" Content="Agregar cargos o nombres en Configuración" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionCardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock FontWeight="SemiBold" Text="Cámara y equipo" />
+                    <ComboBox
+                        x:Name="CamaraCombo"
+                        MinWidth="220"
+                        HorizontalAlignment="Stretch"
+                        DisplayMemberPath="Nombre"
+                        Header="Cámara"
+                        PlaceholderText="Elige una cámara" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Electrónicos y periféricos" />
+                    <ItemsRepeater x:Name="EquiposGrid">
+                        <ItemsRepeater.Layout>
+                            <UniformGridLayout
+                                MinColumnSpacing="8"
+                                MinItemWidth="180"
+                                MinRowSpacing="4" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType="models:SelectableItem">
+                                <CheckBox
+                                    MinWidth="180"
+                                    Content="{x:Bind Nombre}"
+                                    IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                    <TextBox
+                        x:Name="NotasBox"
+                        AcceptsReturn="True"
+                        Header="Notas"
+                        Height="110"
+                        PlaceholderText="Detalles de la sesión, toma, locación..."
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="8">
+                <Button Click="Cancelar_Click" Content="Cancelar" />
+                <Button
+                    x:Name="ExportarButton"
+                    Click="Exportar_Click"
+                    Content="Exportar esta grabación"
+                    Visibility="Collapsed" />
+                <Button Click="Guardar_Click" Content="Guardar en bitácora" Style="{StaticResource AccentButtonStyle}" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BitacoraGrabacion (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "BitacoraGrabacion (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
